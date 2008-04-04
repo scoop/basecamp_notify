@@ -10,12 +10,14 @@ INSTALLATION:
 
 * Stick it in yourapp/vendor/plugins/basecamp_notify
 * Copy the example configuration containing your sensible Basecamp login data
-  from examples/basecamp.yml into config/basecamp.yml and adjust the contents
+  from examples/basecamp.yml into config/basecamp.yml and adjust the contents.
+  (And ignore it via .gitignore)
 
 KNOWN ISSUES:
 
 * Only works with git. But this is GitHub after all.
 * You might have to fork to customize the look-and-feel of the posted messages
+* No error checking, really
 
 CREDITS:
 

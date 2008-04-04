@@ -1,0 +1,7 @@
+# Put into <yourapp>/config/basecamp.yml
+basecamp:
+  domain: somedomain.projectpath.com
+  user: capistrano
+  password: password
+  project_id: 123456
+  category_id: 789012

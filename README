@@ -1,0 +1,25 @@
+basecamp_notify
+===============
+
+A super-simple Capistrano recipe that hooks into your deploy process and
+posts new messages to your project's Basecamp account on each deploy,
+containing the abbreviated commit logs of each commit between the last deploy
+and the current deploy.
+
+INSTALLATION:
+
+* Stick it in yourapp/vendor/plugins/basecamp_notify
+* Copy the example configuration containing your sensible Basecamp login data
+  from examples/basecamp.yml into config/basecamp.yml and adjust the contents
+
+KNOWN ISSUES:
+
+* Only works with git. But this is GitHub after all.
+* You might have to fork to customize the look-and-feel of the posted messages
+
+CREDITS:
+
+* The Basecamp API Wrapper by 37 Signals (bundled in vendor/):
+  http://developer.37signals.com/basecamp/basecamp.rb
+* Inspiration:
+  http://www.37signals.com/svn/posts/951-using-basecamp-to-automatically-keep-track-of-product-releases

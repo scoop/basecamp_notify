@@ -15,7 +15,7 @@ INSTALLATION:
 
 KNOWN ISSUES:
 
-* Only works with git. But this is GitHub after all.
+* Only works with git and subversion.
 * You might have to fork to customize the look-and-feel of the posted messages
 * No error checking, really
 

@@ -22,6 +22,10 @@ namespace :basecamp do
 
   desc 'Grab the revision log between the previous and the current deploy from the remote server'
   task :grab_revision_log do
-    %x( git log --pretty=format:"* [%h, %an] %s" #{previous_revision}..#{current_revision} )
+    if scm == 'git'
+      return %x( git log --pretty=format:"* [%h, %an] %s" #{previous_revision}..#{current_revision} )
+    else
+      return %x( svn log --revision #{current_revision}:#{previous_revision} )
+    end
   end
 end

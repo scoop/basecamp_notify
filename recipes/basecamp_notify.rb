@@ -22,10 +22,28 @@ namespace :basecamp do
 
   desc 'Grab the revision log between the previous and the current deploy from the remote server'
   task :grab_revision_log do
-    if scm == 'git'
-      return %x( git log --pretty=format:"* [%h, %an] %s" #{previous_revision}..#{current_revision} )
-    else
-      return %x( svn log --revision #{current_revision}:#{previous_revision} )
+    return case scm.to_sym
+      when :git:
+        %x( git log --pretty=format:"* [%h, %an] %s" #{previous_revision}..#{current_revision} )
+      when :subversion:
+        require 'rexml/document'
+        format_svn_log(current_revision, previous_revision)
     end
+  end
+  
+  def format_svn_log(current_revision, previous_revision)
+    # Using REXML as it comes bundled with Ruby, would love to use Hpricot.
+    # <logentry revision="2176">
+    #   <author>jgoebel</author>
+    #   <date>2006-09-17T02:38:48.040529Z</date>
+    #   <msg>add delete link</msg>
+    # </logentry>
+    require 'rexml/document'
+    xml = REXML::Document.new(%x( svn log --xml --revision #{current_revision}:#{previous_revision} ))
+    xml.elements.collect('//logentry') do |logentry|
+      "* [#{logentry.attributes['revision']}, #{logentry.elements['author'].text}] #{logentry.elements['msg'].text}"
+    end
+  rescue
+    %x( svn log --revision #{current_revision}:#{previous_revision} )
   end
 end

@@ -40,7 +40,7 @@ namespace :basecamp do
     xml = REXML::Document.new(%x( svn log --xml --revision #{current_revision}:#{previous_revision} ))
     xml.elements.collect('//logentry') do |logentry|
       "* [#{logentry.attributes['revision']}, #{logentry.elements['author'].text}] #{logentry.elements['msg'].text}"
-    end
+    end.join("\n")
   rescue
     %x( svn log --revision #{current_revision}:#{previous_revision} )
   end

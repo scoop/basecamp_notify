@@ -20,14 +20,12 @@ namespace :basecamp do
     }
   end
 
-  desc 'Grab the revision log between the previous and the current deploy from the remote server'
-  task :grab_revision_log do
-    return case scm.to_sym
-      when :git:
+  def grab_revision_log
+    case scm.to_sym
+      when :git
         %x( git log --pretty=format:"* [%h, %an] %s" #{previous_revision}..#{current_revision} )
-      when :subversion:
-        require 'rexml/document'
-        format_svn_log(current_revision, previous_revision)
+      when :subversion
+        format_svn_log current_revision, previous_revision
     end
   end
   

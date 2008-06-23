@@ -15,7 +15,7 @@ namespace :basecamp do
   task :notify do
     unless exists?(:stage) and stage.to_sym != :production
       api_wrapper.post_message basecamp_config['project_id'], {
-        :title => "Deploy: #{application} [#{current_revision[0..6]}]",
+        :title => "#{ basecamp_config['prefix'] || 'Deploy' }: #{application} [#{current_revision[0..6]}]",
         :body => grab_revision_log,
         :category_id => basecamp_config['category_id']
       }

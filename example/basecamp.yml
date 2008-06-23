@@ -5,3 +5,4 @@ basecamp:
   password: password
   project_id: 123456
   category_id: 789012
+  prefix: Deploy

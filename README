@@ -16,7 +16,6 @@ INSTALLATION:
 KNOWN ISSUES:
 
 * Only works with git and subversion.
-* You might have to fork to customize the look-and-feel of the posted messages
 * No error checking, really. Although the Subversion part falls back to a standard
   `svn log` if the XML parsing fails
 

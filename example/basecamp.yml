@@ -6,3 +6,6 @@ basecamp:
   project_id: 123456
   category_id: 789012
   prefix: Deploy
+  notify:
+    - 123456
+    - 789012

@@ -25,7 +25,7 @@ namespace :basecamp do
   def grab_revision_log
     case scm.to_sym
       when :git
-        %x( git log --pretty=format:"* [%h, %an] %s" #{previous_revision}..#{current_revision} )
+        %x( git log --pretty=format:"* #{ basecamp_config['git_log_format'] || "[%h, %an] %s"}" #{previous_revision}..#{current_revision} )
       when :subversion
         format_svn_log current_revision, previous_revision
     end

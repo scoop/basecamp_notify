@@ -18,7 +18,7 @@ namespace :basecamp do
         :title => "#{ basecamp_config['prefix'] || 'Deploy' }: #{application} [#{current_revision[0..6]}]",
         :body => grab_revision_log,
         :category_id => basecamp_config['category_id']
-      }
+      }, basecamp_config['notify'] || []
     end
   end
 

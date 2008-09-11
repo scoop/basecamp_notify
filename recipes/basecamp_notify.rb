@@ -7,18 +7,25 @@ namespace :basecamp do
     YAML.load(File.open('config/basecamp.yml'))['basecamp']
   end
 
-  set :api_wrapper do
-    Basecamp.new(basecamp_config['domain'], basecamp_config['user'], basecamp_config['password'])
-  end
-
   desc 'Post a new message to Basecamp containing the commit messages between the previous and the current deploy'
   task :notify do
     unless exists?(:stage) and stage.to_sym != :production
-      api_wrapper.post_message basecamp_config['project_id'], {
-        :title => "#{ basecamp_config['prefix'] || 'Deploy' }: #{application} [#{current_revision[0..6]}]",
-        :body => grab_revision_log,
-        :category_id => basecamp_config['category_id']
-      }, basecamp_config['notify'] || []
+      domain = basecamp_config['domain']
+      user = basecamp_config['user']
+      password = basecamp_config['password']
+      use_ssl = basecamp_config['use_ssl']
+      project = basecamp_config['project_id']
+      category = basecamp_config['category_id']
+      prefix = basecamp_config['prefix'] || 'Deploy'
+
+      Basecamp.establish_connection!(domain, user, password, use_ssl)
+
+      m = Basecamp::Message.new(:project_id => project)
+      m.title = "#{prefix} - #{current_revision[0..7]}"
+      m.body = grab_revision_log
+      m.category_id = category
+
+      m.save
     end
   end
 

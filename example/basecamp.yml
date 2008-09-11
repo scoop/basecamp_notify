@@ -3,9 +3,7 @@ basecamp:
   domain: somedomain.projectpath.com
   user: capistrano
   password: password
+  use_ssl: true
   project_id: 123456
   category_id: 789012
   prefix: Deploy
-  notify:
-    - 123456
-    - 789012

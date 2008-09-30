@@ -9,13 +9,13 @@ namespace :basecamp do
 
   desc 'Post a new message to Basecamp containing the commit messages between the previous and the current deploy'
   task :notify do
-    unless exists?(:stage) and stage.to_sym != :production
+    if exists?(:stage) and (basecamp_config['stages'].keys.include?(stage.to_s) || stage.to_sym != :production)
       domain = basecamp_config['domain']
       user = basecamp_config['user']
       password = basecamp_config['password']
       use_ssl = basecamp_config['use_ssl']
       project = basecamp_config['project_id']
-      category = basecamp_config['category_id']
+      category = basecamp_config['stages'][stage.to_s] || basecamp_config['category_id']
       prefix = basecamp_config['prefix'] || 'Deploy'
 
       Basecamp.establish_connection!(domain, user, password, use_ssl)

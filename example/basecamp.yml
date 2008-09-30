@@ -6,4 +6,10 @@ basecamp:
   use_ssl: true
   project_id: 123456
   category_id: 789012
+  stages:
+      staging: 345678
+      production: 901234
   prefix: Deploy
+  notify:
+      - 567890
+      - 123456

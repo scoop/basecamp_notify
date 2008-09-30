@@ -4,6 +4,7 @@ basecamp:
   user: capistrano
   password: password
   use_ssl: true
+  ask_msg: true
   project_id: 123456
   category_id: 789012
   stages:

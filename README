@@ -24,6 +24,8 @@ The "title_format"-string can include the following placeholders:
 * %a for the application
 * %s for the stage
 
+You also can (be) ask(ed) for a deployment message by adding "ask_msg: true" to your configuration.
+
 KNOWN ISSUES:
 
 * Only works with git and subversion.

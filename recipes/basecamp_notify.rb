@@ -18,13 +18,14 @@ namespace :basecamp do
       category = basecamp_config['stages'][stage.to_s] || basecamp_config['category_id']
       prefix = basecamp_config['prefix'] || 'Deploy'
       title = parse_title(basecamp_config['title_format']) || "#{prefix} - #{current_revision[0..7]}"
+      
       Basecamp.establish_connection!(domain, user, password, use_ssl)
-
+      msg = basecamp_config['ask_msg'] ? Capistrano::CLI.ui.ask("Deployment notice (press enter for none):") : nil
+      
       m = Basecamp::Message.new(:project_id => project)
       m.title = title
-      m.body = grab_revision_log
+      m.body = msg && msg == '' ? msg + "\n\n" + grab_revision_log : grab_revision_log
       m.category_id = category
-
       m.save
     end
   end

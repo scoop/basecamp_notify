@@ -17,11 +17,11 @@ namespace :basecamp do
       project = basecamp_config['project_id']
       category = basecamp_config['stages'][stage.to_s] || basecamp_config['category_id']
       prefix = basecamp_config['prefix'] || 'Deploy'
-
+      title = parse_title(basecamp_config['title_format']) || "#{prefix} - #{current_revision[0..7]}"
       Basecamp.establish_connection!(domain, user, password, use_ssl)
 
       m = Basecamp::Message.new(:project_id => project)
-      m.title = "#{prefix} - #{current_revision[0..7]}"
+      m.title = title
       m.body = grab_revision_log
       m.category_id = category
 
@@ -37,7 +37,7 @@ namespace :basecamp do
         format_svn_log current_revision, previous_revision
     end
   end
-  
+    
   def format_svn_log(current_revision, previous_revision)
     # Using REXML as it comes bundled with Ruby, would love to use Hpricot.
     # <logentry revision="2176">
@@ -52,5 +52,10 @@ namespace :basecamp do
     end.join("\n")
   rescue
     %x( svn log --revision #{current_revision}:#{previous_revision} )
+  end
+  
+  def parse_title(title_string)
+    return false if !title_string
+    title_string.sub('%p', basecamp_config['prefix']).sub('%a', application).sub('%r', current_revision[0..7]).sub('%s', stage.to_s)
   end
 end

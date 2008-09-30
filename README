@@ -13,6 +13,19 @@ INSTALLATION:
   from examples/basecamp.yml into config/basecamp.yml and adjust the contents.
   (And ignore it via .gitignore)
 
+USAGE:
+
+In basecamp.yml you can additionally define a specific category for each stage and 
+you can format the the title of the message by using "title_format".
+The "title_format"-string can include the following placeholders:
+
+* %r for the current_revision
+* %p for the defined prefix
+* %a for the application
+* %s for the stage
+
+You also can (be) ask(ed) for a deployment message by adding "ask_msg: true" to your configuration.
+
 KNOWN ISSUES:
 
 * Only works with git and subversion.

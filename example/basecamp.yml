@@ -10,6 +10,7 @@ basecamp:
       staging: 345678
       production: 901234
   prefix: Deploy
+  title_format: "%p %a - r%r (%s)"
   notify:
       - 567890
       - 123456

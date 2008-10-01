@@ -16,8 +16,7 @@ namespace :basecamp do
       use_ssl = basecamp_config['use_ssl']
       project = basecamp_config['project_id']
       category = basecamp_config['stages'][stage.to_s] || basecamp_config['category_id']
-      prefix = basecamp_config['prefix'] || 'Deploy'
-      title = parse_title(basecamp_config['title_format']) || "#{prefix} - #{current_revision[0..7]}"
+      title = parse_title(basecamp_config['title_format'])
       
       Basecamp.establish_connection!(domain, user, password, use_ssl)
       msg = basecamp_config['ask_msg'] ? Capistrano::CLI.ui.ask("Deployment notice (press enter for none):") : nil
@@ -56,7 +55,8 @@ namespace :basecamp do
   end
   
   def parse_title(title_string)
-    return false if !title_string
-    title_string.sub('%p', basecamp_config['prefix']).sub('%a', application).sub('%r', current_revision[0..7]).sub('%s', stage.to_s)
+    prefix = basecamp_config['prefix'] || 'Deploy'
+    return "#{prefix} - #{current_revision[0..7]}" unless title_string
+    title_string.sub('%p', prefix).sub('%a', application).sub('%r', current_revision[0..7]).sub('%s', stage.to_s)
   end
 end

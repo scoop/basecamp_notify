@@ -8,10 +8,8 @@ basecamp:
   project_id: 123456
   category_id: 789012
   stages:
-      staging: 345678
-      production: 901234
+    staging: 345678
+    production: 901234
   prefix: Deploy
   title_format: "%p %a - r%r (%s)"
-  notify:
-      - 567890
-      - 123456
+  git_log_format: "%s [%an, %h]"

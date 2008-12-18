@@ -3,28 +3,20 @@ require File.dirname(__FILE__) + '/../vendor/basecamp'
 after 'deploy:symlink', 'basecamp:notify'
 
 namespace :basecamp do
-  set :basecamp_config do
+  set :config do
     YAML.load(File.open('config/basecamp.yml'))['basecamp']
   end
 
   desc 'Post a new message to Basecamp containing the commit messages between the previous and the current deploy'
   task :notify do
-    if exists?(:stage) and (basecamp_config['stages'].keys.include?(stage.to_s) || stage.to_sym != :production)
-      domain = basecamp_config['domain']
-      user = basecamp_config['user']
-      password = basecamp_config['password']
-      use_ssl = basecamp_config['use_ssl']
-      project = basecamp_config['project_id']
-      category = basecamp_config['stages'][stage.to_s] || basecamp_config['category_id']
-      title = parse_title(basecamp_config['title_format'])
+    if exists?(:stage) and (config['stages'].keys.include?(stage.to_s) || stage.to_sym != :production)
+      Basecamp.establish_connection!(config['domain'], config['user'], config['password'], config['use_ssl'] || false)
+      msg = config['ask_msg'] ? Capistrano::CLI.ui.ask("Deployment notice (press enter for none):") : nil
       
-      Basecamp.establish_connection!(domain, user, password, use_ssl)
-      msg = basecamp_config['ask_msg'] ? Capistrano::CLI.ui.ask("Deployment notice (press enter for none):") : nil
-      
-      m = Basecamp::Message.new(:project_id => project)
-      m.title = title
-      m.body = msg && msg == '' ? msg + "\n\n" + grab_revision_log : grab_revision_log
-      m.category_id = category
+      m = Basecamp::Message.new(:project_id => config['project_id'])
+      m.title = parse_title(config['title_format'])
+      m.body = msg ? msg + "\n\n" + grab_revision_log : grab_revision_log
+      m.category_id = config['stages'][stage.to_s] || config['category_id']
       m.save
     end
   end
@@ -32,7 +24,7 @@ namespace :basecamp do
   def grab_revision_log
     case scm.to_sym
       when :git
-        %x( git log --pretty=format:"* #{ basecamp_config['git_log_format'] || "[%h, %an] %s"}" #{previous_revision}..#{current_revision} )
+        %x( git log --pretty=format:"* #{ config['git_log_format'] || "[%h, %an] %s"}" #{previous_revision}..#{current_revision} )
       when :subversion
         format_svn_log current_revision, previous_revision
     end
@@ -55,7 +47,7 @@ namespace :basecamp do
   end
   
   def parse_title(title_string)
-    prefix = basecamp_config['prefix'] || 'Deploy'
+    prefix = config['prefix'] || 'Deploy'
     return "#{prefix} - #{current_revision[0..7]}" unless title_string
     title_string.sub('%p', prefix).sub('%a', application).sub('%r', current_revision[0..7]).sub('%s', stage.to_s)
   end
